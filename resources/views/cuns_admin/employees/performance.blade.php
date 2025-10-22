@@ -8,7 +8,6 @@
         <!-- Header Section -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="mb-0">Project Performance Dashboard</h4>
-            <button class="btn btn-primary"><i class="fas fa-download me-2"></i>Export Report</button>
         </div>
 
         <!-- KPI Cards -->
@@ -57,10 +56,7 @@
                 <h5 class="mb-0">Project Performance Summary</h5>
             </div>
             <div class="card-body">
-                <div class="text-center text-muted" style="height: 300px; border: 2px dashed #ccc; border-radius: 10px;">
-                    <p class="mt-5"><i class="fas fa-chart-bar fa-3x mb-3"></i></p>
-                    <p>Performance chart visualization will appear here (e.g., Bar or Line Chart)</p>
-                </div>
+                <canvas id="performanceChart" height="200"></canvas>
             </div>
         </div>
 
@@ -69,12 +65,15 @@
             <div class="card-header bg-light d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Individual Employee Performance</h5>
                 <div>
-                    <input type="search" class="form-control form-control-sm d-inline w-auto"
+                    <input id="performanceSearch" type="search" class="form-control form-control-sm d-inline w-auto"
                         placeholder="Search employee...">
+                    {{-- <button id="exportPerformance" class="btn btn-primary"><i class="fas fa-download me-2"></i>Export --}}
+                    Report</button>
+
                 </div>
             </div>
             <div class="card-body table-responsive">
-                <table class="table table-striped align-middle">
+                <table id="performanceTable" class="table table-striped align-middle">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -165,4 +164,135 @@
         </div>
 
     </div>
+    @push('scripts')
+        <!-- DataTables Buttons extension for export (only for this view) -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css">
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Initialize Chart.js chart
+                const ctx = document.getElementById('performanceChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                        datasets: [{
+                            label: 'Average Productivity (%)',
+                            data: [88, 90, 92, 92],
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.15)',
+                            tension: 0.3,
+                            fill: true
+                        }, {
+                            label: 'Attendance Rate (%)',
+                            data: [94, 95, 95, 95],
+                            borderColor: 'rgba(40, 167, 69, 1)',
+                            backgroundColor: 'rgba(40, 167, 69, 0.12)',
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Project Performance Summary (Monthly)'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100
+                            }
+                        }
+                    }
+                });
+
+                // Initialize DataTable (must be before handlers that use `table`)
+                var table = $('#performanceTable').DataTable({
+                    dom: 'Bfrtip',
+                    // buttons: [{
+                    //     extend: 'excelHtml5',
+                    //     title: 'Performance Report',
+                    //     text: 'Export',
+                    //     className: 'buttons-excel btn btn-md btn-primary'
+                    // }]
+                });
+
+                // Wire search input to DataTable
+                $('#performanceSearch').on('input', function() {
+                    table.search(this.value).draw();
+                });
+
+                // Export button in header triggers DataTable excel button if available,
+                // otherwise fall back to CSV export using existing button.
+                function fallbackExportCSV(filename) {
+                    filename = filename || 'performance_report.csv';
+                    var rows = [];
+                    $('#performanceTable thead tr').each(function() {
+                        var cols = [];
+                        $(this).find('th').each(function() {
+                            cols.push('"' + $(this).text().trim().replace(/"/g, '""') + '"');
+                        });
+                        rows.push(cols.join(','));
+                    });
+                    $('#performanceTable tbody tr:visible').each(function() {
+                        var cols = [];
+                        $(this).find('td').each(function() {
+                            cols.push('"' + $(this).text().trim().replace(/"/g, '""') + '"');
+                        });
+                        rows.push(cols.join(','));
+                    });
+                    var csv = rows.join('\n');
+                    var blob = new Blob([csv], {
+                        type: 'text/csv;charset=utf-8;'
+                    });
+                    if (navigator.msSaveBlob) { // IE 10+
+                        navigator.msSaveBlob(blob, filename);
+                    } else {
+                        var link = document.createElement('a');
+                        if (link.download !== undefined) {
+                            var url = URL.createObjectURL(blob);
+                            link.setAttribute('href', url);
+                            link.setAttribute('download', filename);
+                            link.style.visibility = 'hidden';
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                        }
+                    }
+                }
+
+                $('#exportPerformance').on('click', function(e) {
+                    e.preventDefault();
+                    var triggered = false;
+                    try {
+                        if (table && typeof table.button === 'function') {
+                            // try to trigger DataTables excel button
+                            var btns = table.buttons();
+                            if (btns && btns.count() > 0) {
+                                // find excel button index
+                                table.button('.buttons-excel').trigger();
+                                triggered = true;
+                            }
+                        }
+                    } catch (err) {
+                        console.warn('DataTables export failed, falling back to CSV:', err);
+                    }
+                    if (!triggered) {
+                        fallbackExportCSV('performance_report.csv');
+                    }
+                });
+            });
+        </script>
+    @endpush
+
 @endsection

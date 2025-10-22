@@ -62,7 +62,8 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between mb-3">
                     <input type="text" class="form-control w-25" placeholder="Search Employee...">
-                    <button class="btn btn-primary"><i class="bi bi-person-plus-fill"></i> Add Employee</button>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEmployeeModal"><i
+                            class="bi bi-person-plus-fill"></i> Add Employee</button>
                 </div>
 
                 <table class="table table-hover table-bordered align-middle">
@@ -106,6 +107,48 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <!-- Modal for Add Employee -->
+        <div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="addEmployeeLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title" id="addEmployeeLabel">Add New Employee</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="employeeName" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="employeeName" placeholder="Enter name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="employeeDesignation" class="form-label">Designation</label>
+                                <input type="text" class="form-control" id="employeeDesignation"
+                                    placeholder="Enter designation">
+                            </div>
+                            <div class="mb-3">
+                                <label for="employeeProject" class="form-label">Project</label>
+                                <input type="text" class="form-control" id="employeeProject" placeholder="Enter project">
+                            </div>
+                            <div class="mb-3">
+                                <label for="employeeContact" class="form-label">Contact</label>
+                                <input type="text" class="form-control" id="employeeContact" placeholder="Enter contact">
+                            </div>
+                            <div class="mb-3">
+                                <label for="employeeStatus" class="form-label">Status</label>
+                                <select class="form-select" id="employeeStatus">
+                                    <option value="Active">Active</option>
+                                    <option value="On Leave">On Leave</option>
+                                    <option value="Inactive">Inactive</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-success">Add Employee</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
 

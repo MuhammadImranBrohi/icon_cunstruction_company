@@ -80,10 +80,10 @@ Route::get('/dashboard/index', [AdminController::class, 'dashboardIndex'])->name
     // ====== PROJECTS ======
     Route::prefix('projects')->group(function () {
         Route::get('/', [AdminController::class, 'projectsIndex'])->name('projects.index');
-        Route::get('/project_create', [AdminController::class, 'projectsCreate'])->name('projects.create');
-        Route::get('/project_show', [AdminController::class, 'projectsShow'])->name('projects.show');
-        Route::get('/project_reports', [AdminController::class, 'projectsReports'])->name('projects.reports');
-        Route::get('/project_milestones', [AdminController::class, 'projectsMilestones'])->name('projects.milestones');
+        Route::get('/create', [AdminController::class, 'projectsCreate'])->name('projects.create');
+        Route::get('/show', [AdminController::class, 'projectsShow'])->name('projects.show');
+        Route::get('/reports', [AdminController::class, 'projectsReports'])->name('projects.reports');
+        Route::get('/milestones', [AdminController::class, 'projectsMilestones'])->name('projects.milestones');
     });
 
     // ====== REPORT ======
@@ -150,3 +150,20 @@ Route::middleware([
 // 2025_10_21_000013_create_financial_transactions_table.php;
 // 1️⃣5️⃣ Project Employees (Pivot Table);
 // last continue from tabel 15;
+
+// echo "# icon_cunstruction_company" >> README.md;
+// git init;
+// git add README.md
+// git commit -m "first commit"
+// git branch -M main
+// git remote add origin https://github.com/MuhammadImranBrohi/icon_cunstruction_company.git
+// git push -u origin main
+
+// 
+// --------------------------------------------------------------------
+// --------------------------------------------------------------------
+// --------------------------------------------------------------------
+// or push an existing repository from the command line
+// git remote add origin https://github.com/MuhammadImranBrohi/icon_cunstruction_company.git
+// git branch -M main
+// git push -u origin main
