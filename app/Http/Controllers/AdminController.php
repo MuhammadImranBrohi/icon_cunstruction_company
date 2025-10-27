@@ -62,7 +62,7 @@ class AdminController extends Controller
     public function projectsReports() { return view('cuns_admin.projects.reports'); }
     public function projectsMilestones() { return view('cuns_admin.projects.milestones'); }
 
-    // ===== REPORT =====
+    // ===== REPORT ====
     public function reportEmployees() { return view('cuns_admin.report.employees'); }
     public function reportFinance() { return view('cuns_admin.report.finance'); }
     public function reportProjects() { return view('cuns_admin.report.projects'); }

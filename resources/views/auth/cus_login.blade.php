@@ -5,15 +5,14 @@
             <div class="max-w-md w-full bg-white shadow-lg rounded-2xl p-8 space-y-6">
                 <!-- Logo -->
                 <div class="flex justify-center mb-4">
-                    <a href="{{ url('/') }}">
-                        <img src="{{ asset('cuns_admin/dist/assets/img/avatar2.png') }}" alt="CUNS Logo"
+                    <a href="{{ url('/cus_login') }}">
+                        <img src="{{ asset('cuns_admin/dist/assets/img/cunstruction.png') }}" alt="CUNS Logo"
                             class="w-24 h-24 rounded-full shadow-md">
                     </a>
                 </div>
 
                 <!-- Title -->
-                <h2 class="text-3xl font-bold text-center text-gray-800">Welcome Back 👋</h2>
-                <p class="text-center text-gray-500">Login to your account</p>
+                <h2 class="text-3xl font-bold text-center text-gray-800">Login to your account</h2>
 
                 <!-- Validation Errors -->
                 <x-validation-errors class="mb-4" />
@@ -26,7 +25,7 @@
                 @endsession
 
                 <!-- Login Form -->
-                <form method="POST" action="{{ route('login') }}" class="space-y-5">
+                <form method="POST" action="{{ route('cus_login') }}" class="space-y-5">
                     @csrf
 
                     <div>
@@ -73,7 +72,8 @@
                 <!-- Register Link -->
                 <p class="text-center text-sm text-gray-600 mt-6">
                     Don't have an account?
-                    <a href="{{ route('register') }}" class="text-blue-600 hover:underline font-semibold">Register</a>
+                    <a href="{{ route('cus_register') }}"
+                        class="text-blue-600 hover:underline font-semibold">Register</a>
                 </p>
             </div>
         </div>
@@ -82,8 +82,15 @@
         <div
             class="hidden md:flex w-1/2 items-center justify-center bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 text-white rounded-l-[50px]">
             <div class="text-center px-8">
-                <h2 class="text-4xl font-bold mb-4">Join the CUNS Family</h2>
+                <h2 class="text-4xl font-bold mb-4">connect with us to make a better world </h2>
                 <p class="text-lg text-blue-100">Secure and seamless login experience built just for you.</p>
+                {{-- outline our commitments  --}}
+                <ul class="mt-4 text-left text-blue-200 space-y-2">
+                    <li>✔ Commitment to Data Privacy</li>
+                    <li>✔ 24/7 Customer Support</li>
+                    <li>✔ Regular Security Updates</li>
+                    <li>✔ User-Friendly Interface</li>
+                </ul>
             </div>
         </div>
     </div>

@@ -7,7 +7,7 @@
     <div class="container-fluid px-4">
         {{-- ===== Page Header ===== --}}
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Welcome back, Admin 👋</h1>
+            <h1 class="h3 mb-0 text-gray-800">Welcome back, Admin</h1>
             <button class="btn btn-primary"><i class="fas fa-plus-circle"></i> Add New Project</button>
         </div>
 

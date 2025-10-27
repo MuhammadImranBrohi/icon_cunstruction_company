@@ -1,5 +1,5 @@
 <?php
-
+// App\Providers\FortifyServiceProvider::class
 return [
 
     /*

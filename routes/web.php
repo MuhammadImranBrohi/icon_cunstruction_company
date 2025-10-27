@@ -4,13 +4,14 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\managercontroller;
 //
 // MfsV7M1Wid-aVAm95Rpzv // R80a6VCb3B-jGKthS2UwP // fkFjr79FjA-2DX6twDLR3
 // wyI953fZ4g-nfob0vdpeY // awzuyrbIMR-wN1ekimwS0  // bzuHL2a2UU-C8nykhCW0A // MiGwGfalhw-4H3A8uzzFy // u7uoFPOk80-gKSdRkjnZl
 
 route::get('/',function(){ return view('index'); })->name('home');
 Route::get('/index', function () {  return view('index');  })->name('index');
-Route::get('/about', function () {   return view('about');  })->name('about'); 
+Route::get('/about', function () {   return view('about');  })->name('about');
 Route::get('/contact', function () {  return view('contact');  })->name('contact');
 Route::get('/feature', function () {  return view('feature');  })->name('feature');
 Route::get('/blog',function(){ return view('blog');   })->name('blog');
@@ -19,13 +20,14 @@ Route::get('/project', function () {   return view('project');  })->name('projec
 Route::get('/team', function () {    return view('team'); })->name('team');
 Route::get('/testimonial', function () {  return view('testimonial');  })->name('testimonial');
 Route::view('dashboard', 'dashboard') ->middleware(['auth', 'verified']) ->name('dashboard');
+Route::get('/cus_register',function(){ return view('auth.cus_register'); })->name('/cus_register');
 
+Route::post('/cus_login',function(){ return view('auth.cus_login'); })->name('/cus_login');
 
-
-//  the admin  dashboard panel routes
+//  the admin dashboard panel routes
 Route::prefix('cuns_admin')->group(function () {
     // ====== DASHBOARD ======
-Route::get('/dashboard/index', [AdminController::class, 'dashboardIndex'])->name('dashboard.index');
+    Route::get('/dashboard/index', [AdminController::class, 'dashboardIndex'])->name('dashboard.index');
     // ====== CLIENTS ======
     Route::prefix('clients')->group(function () {
         Route::get('/', [AdminController::class, 'clientsIndex'])->name('clients.index');
@@ -76,7 +78,6 @@ Route::get('/dashboard/index', [AdminController::class, 'dashboardIndex'])->name
         Route::get('/inventory_alerts', [AdminController::class, 'inventoryAlerts'])->name('inventory.alerts');
         Route::get('/inventory_suppliers', [AdminController::class, 'inventorySuppliers'])->name('inventory.suppliers');
     });
-
     // ====== PROJECTS ======
     Route::prefix('projects')->group(function () {
         Route::get('/', [AdminController::class, 'projectsIndex'])->name('projects.index');
@@ -85,14 +86,12 @@ Route::get('/dashboard/index', [AdminController::class, 'dashboardIndex'])->name
         Route::get('/reports', [AdminController::class, 'projectsReports'])->name('projects.reports');
         Route::get('/milestones', [AdminController::class, 'projectsMilestones'])->name('projects.milestones');
     });
-
     // ====== REPORT ======
     Route::prefix('report')->group(function () {
         Route::get('/employees', [AdminController::class, 'reportEmployees'])->name('report.employees');
         Route::get('/finance', [AdminController::class, 'reportFinance'])->name('report.finance');
         Route::get('/projects', [AdminController::class, 'reportProjects'])->name('report.projects');
     });
-
     // ====== SETTINGS ======
     Route::prefix('settings')->group(function () {
         Route::get('/backup', [AdminController::class, 'settingsBackup'])->name('settings.backup');
@@ -102,16 +101,11 @@ Route::get('/dashboard/index', [AdminController::class, 'dashboardIndex'])->name
 
 });
 
+//  the manager dashboard panel routes
+Route::prefix('cuns_manager')->group(function () {
+    Route::get('/dashboard/index', [App\Http\Controllers\managercontroller::class, 'index'])->name('dashboard.index');
+});
 
-
-
-
-
-
-
-
-route::get('/register',function(){ return view('auth.register'); })->name('register');
-route::get('/login',function(){ return view('auth.login'); })->name('login');
 
 
 //  the by laravel
@@ -159,7 +153,7 @@ Route::middleware([
 // git remote add origin https://github.com/MuhammadImranBrohi/icon_cunstruction_company.git
 // git push -u origin main
 
-// 
+//
 // --------------------------------------------------------------------
 // --------------------------------------------------------------------
 // --------------------------------------------------------------------
