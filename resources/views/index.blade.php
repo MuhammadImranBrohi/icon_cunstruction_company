@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>ICON Building CONSTRUCTION COMPANY</title>
+    <title>ICON CONSTRUCTION COMPANY</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -90,7 +90,7 @@
                     <a href="/index" class="nav-item nav-link active">Home</a>
                     <a href="/about" class="nav-item nav-link">About</a>
                     <a href="/service" class="nav-item nav-link">Services</a>
-                    <a href="{{ url('/register') }}" class="nav-item nav-link">
+                    <a href="{{ url('/cus_register') }}" class="nav-item nav-link">
                         Register
                     </a>
 

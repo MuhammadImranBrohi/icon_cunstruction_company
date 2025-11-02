@@ -5,7 +5,7 @@ use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\managercontroller;
-//
+
 // MfsV7M1Wid-aVAm95Rpzv // R80a6VCb3B-jGKthS2UwP // fkFjr79FjA-2DX6twDLR3
 // wyI953fZ4g-nfob0vdpeY // awzuyrbIMR-wN1ekimwS0  // bzuHL2a2UU-C8nykhCW0A // MiGwGfalhw-4H3A8uzzFy // u7uoFPOk80-gKSdRkjnZl
 
@@ -20,14 +20,17 @@ Route::get('/project', function () {   return view('project');  })->name('projec
 Route::get('/team', function () {    return view('team'); })->name('team');
 Route::get('/testimonial', function () {  return view('testimonial');  })->name('testimonial');
 Route::view('dashboard', 'dashboard') ->middleware(['auth', 'verified']) ->name('dashboard');
-Route::get('/cus_register',function(){ return view('auth.cus_register'); })->name('/cus_register');
 
-Route::post('/cus_login',function(){ return view('auth.cus_login'); })->name('/cus_login');
+
+Route::get('/cus_register',function(){ return view('auth.cus_register'); })->name('/cus_register');
+Route::get('/cus_login',function(){ return view('auth.cus_login'); })->name('/cus_login');
+
 
 //  the admin dashboard panel routes
 Route::prefix('cuns_admin')->group(function () {
     // ====== DASHBOARD ======
     Route::get('/dashboard/index', [AdminController::class, 'dashboardIndex'])->name('dashboard.index');
+    Route::get('/dashboard/profile', [AdminController::class, 'profile'])->name('dashboard.profile');
     // ====== CLIENTS ======
     Route::prefix('clients')->group(function () {
         Route::get('/', [AdminController::class, 'clientsIndex'])->name('clients.index');
@@ -74,9 +77,9 @@ Route::prefix('cuns_admin')->group(function () {
     Route::prefix('inventory')->group(function () {
         Route::get('/', [AdminController::class, 'inventoryIndex'])->name('inventory.index');
         Route::get('/create', [AdminController::class, 'inventoryCreate'])->name('inventory.create');
-        Route::get('/inventory_orders', [AdminController::class, 'inventoryOrders'])->name('inventory.orders');
-        Route::get('/inventory_alerts', [AdminController::class, 'inventoryAlerts'])->name('inventory.alerts');
-        Route::get('/inventory_suppliers', [AdminController::class, 'inventorySuppliers'])->name('inventory.suppliers');
+        Route::get('/inventory_orders', [AdminController::class, 'inventoryOrders'])->name('inventory.inventory_orders');
+        Route::get('/inventory_alerts', [AdminController::class, 'inventoryAlerts'])->name('inventory.inventory_alerts');
+        Route::get('/inventory_suppliers', [AdminController::class, 'inventorySuppliers'])->name('inventory.inventory_suppliers');
     });
     // ====== PROJECTS ======
     Route::prefix('projects')->group(function () {
@@ -102,10 +105,76 @@ Route::prefix('cuns_admin')->group(function () {
 });
 
 //  the manager dashboard panel routes
-Route::prefix('cuns_manager')->group(function () {
-    Route::get('/dashboard/index', [App\Http\Controllers\managercontroller::class, 'index'])->name('dashboard.index');
-});
 
+Route::prefix('cuns_manager')->name('cuns_manager.')->group(function () {
+    
+    // Dashboard
+    Route::get('/dashboard/index', [ManagerController::class, 'index'])->name('dashboard');
+    
+    // Projects
+    Route::prefix('projects')->name('projects.')->group(function () {
+        Route::get('/', [ManagerController::class, 'projectsIndex'])->name('index');
+        Route::get('/create', [ManagerController::class, 'projectsCreate'])->name('create');
+        Route::get('/{id}', [ManagerController::class, 'projectsShow'])->name('show');
+        Route::get('/{id}/edit', [ManagerController::class, 'projectsEdit'])->name('edit');
+        Route::get('/{id}/timeline', [ManagerController::class, 'projectsTimeline'])->name('timeline');
+    });
+    
+    // Staff Management
+    Route::prefix('staff')->name('staff.')->group(function () {
+        Route::get('/employees', [ManagerController::class, 'staffEmployees'])->name('employees');
+        Route::get('/attendance', [ManagerController::class, 'staffAttendance'])->name('attendance');
+        Route::get('/shifts', [ManagerController::class, 'staffShifts'])->name('shifts');
+        Route::get('/leaves', [ManagerController::class, 'staffLeaves'])->name('leaves');
+        Route::get('/performance', [ManagerController::class, 'staffPerformance'])->name('performance');
+    });
+    
+    // Materials Management
+    Route::prefix('materials')->name('materials.')->group(function () {
+        Route::get('/inventory', [ManagerController::class, 'materialsInventory'])->name('inventory');
+        Route::get('/orders', [ManagerController::class, 'materialsOrders'])->name('orders');
+        Route::get('/suppliers', [ManagerController::class, 'materialsSuppliers'])->name('suppliers');
+        Route::get('/usage', [ManagerController::class, 'materialsUsage'])->name('usage');
+    });
+    
+    // Financial Management
+    Route::prefix('finance')->name('finance.')->group(function () {
+        Route::get('/budget', [ManagerController::class, 'financeBudget'])->name('budget');
+        Route::get('/expenses', [ManagerController::class, 'financeExpenses'])->name('expenses');
+        Route::get('/payroll', [ManagerController::class, 'financePayroll'])->name('payroll');
+        Route::get('/reports', [ManagerController::class, 'financeReports'])->name('reports');
+    });
+    
+    // Task Management
+    Route::prefix('tasks')->name('tasks.')->group(function () {
+        Route::get('/', [ManagerController::class, 'tasksIndex'])->name('index');
+        Route::get('/create', [ManagerController::class, 'tasksCreate'])->name('create');
+        Route::get('/progress', [ManagerController::class, 'tasksProgress'])->name('progress');
+    });
+    
+    // Reports
+    Route::prefix('reports')->name('reports.')->group(function () {
+        Route::get('/daily', [ManagerController::class, 'reportsDaily'])->name('daily');
+        Route::get('/attendance', [ManagerController::class, 'reportsAttendance'])->name('attendance');
+        Route::get('/financial', [ManagerController::class, 'reportsFinancial'])->name('financial');
+        Route::get('/performance', [ManagerController::class, 'reportsPerformance'])->name('performance');
+    });
+    
+    // Quality & Safety
+    Route::prefix('quality')->name('quality.')->group(function () {
+        Route::get('/inspections', [ManagerController::class, 'qualityInspections'])->name('inspections');
+        Route::get('/safety-reports', [ManagerController::class, 'qualitySafetyReports'])->name('safety-reports');
+    });
+    
+    // Communication
+    Route::prefix('communication')->name('communication.')->group(function () {
+        Route::get('/', [ManagerController::class, 'communicationIndex'])->name('index');
+        Route::get('/announcement', [ManagerController::class, 'communicationAnnouncement'])->name('announcement');
+    });
+    
+    // Notifications
+    Route::get('/notifications', [ManagerController::class, 'notificationsIndex'])->name('notifications.index');
+});
 
 
 //  the by laravel

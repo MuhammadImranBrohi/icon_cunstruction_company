@@ -5,7 +5,7 @@
             <div class="max-w-md w-full bg-white shadow-lg rounded-2xl p-8 space-y-6">
                 <!-- Logo -->
                 <div class="flex justify-center mb-4">
-                    <a href="{{ url('/cus_login') }}">
+                    <a href="{{ url('cus_login') }}">
                         <img src="{{ asset('cuns_admin/dist/assets/img/cunstruction.png') }}" alt="CUNS Logo"
                             class="w-24 h-24 rounded-full shadow-md">
                     </a>
@@ -25,7 +25,7 @@
                 @endsession
 
                 <!-- Login Form -->
-                <form method="POST" action="{{ route('cus_login') }}" class="space-y-5">
+                <form method="POST" action="{{ route('/cus_login') }}" class="space-y-5">
                     @csrf
 
                     <div>
@@ -72,7 +72,7 @@
                 <!-- Register Link -->
                 <p class="text-center text-sm text-gray-600 mt-6">
                     Don't have an account?
-                    <a href="{{ route('cus_register') }}"
+                    <a href="{{ route('/cus_register') }}"
                         class="text-blue-600 hover:underline font-semibold">Register</a>
                 </p>
             </div>

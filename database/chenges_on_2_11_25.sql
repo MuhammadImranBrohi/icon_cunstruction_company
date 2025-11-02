@@ -1,0 +1,795 @@
+-- Ye tables already exist in your Laravel application:
+-- users
+-- password_reset_tokens
+-- sessions
+-- personal_access_tokens
+-- teams
+-- team_user
+-- team_invitations
+-- Add new columns to existing users table
+-- 2. UPDATE EXISTING USERS TABLE
+
+-- ALTER TABLE users
+-- ADD COLUMN phone VARCHAR(20) NULL AFTER email,
+-- ADD COLUMN address TEXT NULL AFTER phone,
+-- ADD COLUMN date_of_birth DATE NULL AFTER address,
+-- ADD COLUMN gender ENUM('male', 'female', 'other') NULL AFTER date_of_birth,
+-- ADD COLUMN profile_picture VARCHAR(255) NULL AFTER gender,
+-- ADD COLUMN is_active BOOLEAN DEFAULT TRUE AFTER profile_picture,
+-- ADD COLUMN last_login_at TIMESTAMP NULL AFTER is_active,
+-- ADD COLUMN created_by BIGINT UNSIGNED NULL AFTER last_login_at,
+-- ADD COLUMN updated_by BIGINT UNSIGNED NULL AFTER created_by;
+
+-- -- Add foreign keys for created_by and updated_by
+-- ALTER TABLE users
+-- ADD FOREIGN KEY (created_by) REFERENCES users(id),
+-- ADD FOREIGN KEY (updated_by) REFERENCES users(id);
+
+--
+--
+--
+-- 3. ROLES & PERMISSIONS SYSTEM
+--
+--
+
+-- CREATE TABLE roles (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     name VARCHAR(255) NOT NULL UNIQUE,
+--     guard_name VARCHAR(255) DEFAULT 'web',
+--     description TEXT NULL,
+--     is_system BOOLEAN DEFAULT FALSE,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL
+-- );
+
+-- CREATE TABLE permissions (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     name VARCHAR(255) NOT NULL UNIQUE,
+--     guard_name VARCHAR(255) DEFAULT 'web',
+--     group_name VARCHAR(255) NULL,
+--     description TEXT NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL
+-- );
+
+-- CREATE TABLE role_has_permissions (
+--     permission_id BIGINT UNSIGNED NOT NULL,
+--     role_id BIGINT UNSIGNED NOT NULL,
+--     PRIMARY KEY (permission_id, role_id),
+--     FOREIGN KEY (permission_id) REFERENCES permissions(id) ON DELETE CASCADE,
+--     FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
+-- );
+
+-- CREATE TABLE model_has_roles (
+--     role_id BIGINT UNSIGNED NOT NULL,
+--     model_type VARCHAR(255) NOT NULL,
+--     model_id BIGINT UNSIGNED NOT NULL,
+--     PRIMARY KEY (role_id, model_id, model_type),
+--     FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
+-- );
+
+-- CREATE TABLE model_has_permissions (
+--     permission_id BIGINT UNSIGNED NOT NULL,
+--     model_type VARCHAR(255) NOT NULL,
+--     model_id BIGINT UNSIGNED NOT NULL,
+--     PRIMARY KEY (permission_id, model_id, model_type),
+--     FOREIGN KEY (permission_id) REFERENCES permissions(id) ON DELETE CASCADE
+-- );
+--
+--4. COMPANY STRUCTURE
+--
+-- CREATE TABLE departments (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     name VARCHAR(255) NOT NULL,
+--     code VARCHAR(50) UNIQUE NULL,
+--     description TEXT NULL,
+--     head_id BIGINT UNSIGNED NULL,
+--     is_active BOOLEAN DEFAULT TRUE,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (head_id) REFERENCES users(id),
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE designations (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     name VARCHAR(255) NOT NULL,
+--     code VARCHAR(50) UNIQUE NULL,
+--     department_id BIGINT UNSIGNED NOT NULL,
+--     description TEXT NULL,
+--     salary_range_min DECIMAL(12,2) NULL,
+--     salary_range_max DECIMAL(12,2) NULL,
+--     is_active BOOLEAN DEFAULT TRUE,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (department_id) REFERENCES departments(id),
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- 5. EMPLOYEES MANAGEMENT
+-- CREATE TABLE employees (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     user_id BIGINT UNSIGNED UNIQUE NOT NULL,
+--     employee_code VARCHAR(50) UNIQUE NOT NULL,
+--     first_name VARCHAR(255) NOT NULL,
+--     last_name VARCHAR(255) NULL,
+--     father_name VARCHAR(255) NULL,
+--     cnic VARCHAR(15) UNIQUE NULL,
+--     phone VARCHAR(20) NULL,
+--     personal_email VARCHAR(255) NULL,
+--     emergency_contact VARCHAR(20) NULL,
+--     emergency_contact_name VARCHAR(255) NULL,
+--     hire_date DATE NOT NULL,
+--     termination_date DATE NULL,
+--     salary DECIMAL(12,2) DEFAULT 0,
+--     department_id BIGINT UNSIGNED NOT NULL,
+--     designation_id BIGINT UNSIGNED NOT NULL,
+--     reporting_to BIGINT UNSIGNED NULL,
+--     employment_type ENUM('permanent', 'contract', 'probation') DEFAULT 'permanent',
+--     bank_account_number VARCHAR(50) NULL,
+--     bank_name VARCHAR(255) NULL,
+--     is_active BOOLEAN DEFAULT TRUE,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+--     FOREIGN KEY (department_id) REFERENCES departments(id),
+--     FOREIGN KEY (designation_id) REFERENCES designations(id),
+--     FOREIGN KEY (reporting_to) REFERENCES employees(id),
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE employee_documents (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     employee_id BIGINT UNSIGNED NOT NULL,
+--     document_type ENUM('cnic', 'degree', 'experience', 'contract', 'other') NOT NULL,
+--     document_name VARCHAR(255) NOT NULL,
+--     file_path VARCHAR(255) NOT NULL,
+--     file_size BIGINT NULL,
+--     mime_type VARCHAR(100) NULL,
+--     description TEXT NULL,
+--     uploaded_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE,
+--     FOREIGN KEY (uploaded_by) REFERENCES users(id)
+-- );
+
+-- 6. ATTENDANCE & LEAVE SYSTEM
+
+-- CREATE TABLE attendance (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     employee_id BIGINT UNSIGNED NOT NULL,
+--     date DATE NOT NULL,
+--     check_in TIME NULL,
+--     check_out TIME NULL,
+--     status ENUM('present', 'absent', 'late', 'half_day', 'holiday') DEFAULT 'present',
+--     total_hours DECIMAL(4,2) NULL,
+--     overtime_hours DECIMAL(4,2) DEFAULT 0,
+--     notes TEXT NULL,
+--     marked_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE,
+--     FOREIGN KEY (marked_by) REFERENCES users(id),
+--     UNIQUE KEY unique_employee_date (employee_id, date)
+-- );
+
+-- CREATE TABLE leave_types (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     name VARCHAR(255) NOT NULL UNIQUE,
+--     code VARCHAR(50) UNIQUE NULL,
+--     days_per_year INT DEFAULT 0,
+--     carry_forward BOOLEAN DEFAULT FALSE,
+--     max_carry_forward_days INT DEFAULT 0,
+--     is_active BOOLEAN DEFAULT TRUE,
+--     color VARCHAR(7) DEFAULT '#6B7280',
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE leaves (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     employee_id BIGINT UNSIGNED NOT NULL,
+--     leave_type_id BIGINT UNSIGNED NOT NULL,
+--     start_date DATE NOT NULL,
+--     end_date DATE NOT NULL,
+--     total_days INT NOT NULL,
+--     reason TEXT NOT NULL,
+--     status ENUM('pending', 'approved', 'rejected', 'cancelled') DEFAULT 'pending',
+--     approved_by BIGINT UNSIGNED NULL,
+--     approved_at TIMESTAMP NULL,
+--     rejection_reason TEXT NULL,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (employee_id) REFERENCES employees(id),
+--     FOREIGN KEY (leave_type_id) REFERENCES leave_types(id),
+--     FOREIGN KEY (approved_by) REFERENCES users(id),
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- 7. CLIENTS MANAGEMENT
+
+-- CREATE TABLE clients (
+    -- id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    -- user_id BIGINT UNSIGNED UNIQUE NULL,
+    -- company_name VARCHAR(255) NOT NULL,
+    -- contact_person VARCHAR(255) NULL,
+    -- phone VARCHAR(20) NULL,
+    -- email VARCHAR(255) NULL,
+    -- address TEXT NULL,
+    -- city VARCHAR(100) NULL,
+    -- state VARCHAR(100) NULL,
+    -- country VARCHAR(100) DEFAULT 'Pakistan',
+    -- tax_number VARCHAR(100) NULL,
+    -- registration_number VARCHAR(100) NULL,
+    -- client_type ENUM('individual', 'company', 'government') DEFAULT 'individual',
+    -- status ENUM('active', 'inactive', 'suspended') DEFAULT 'active',
+    -- credit_limit DECIMAL(14,2) DEFAULT 0,
+    -- payment_terms ENUM('net_15', 'net_30', 'net_45', 'net_60') DEFAULT 'net_30',
+    -- notes TEXT NULL,
+    -- created_by BIGINT UNSIGNED NULL,
+    -- updated_by BIGINT UNSIGNED NULL,
+    -- created_at TIMESTAMP NULL,
+    -- updated_at TIMESTAMP NULL,
+    -- FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+    -- FOREIGN KEY (created_by) REFERENCES users(id),
+    -- FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- 8. PROJECTS MANAGEMENT
+-- -- CREATE TABLE project_categories (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     name VARCHAR(255) NOT NULL UNIQUE,
+--     description TEXT NULL,
+--     is_active BOOLEAN DEFAULT TRUE,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE project_statuses (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     name VARCHAR(255) NOT NULL UNIQUE,
+--     color VARCHAR(7) DEFAULT '#6B7280',
+--     is_active BOOLEAN DEFAULT TRUE,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE projects (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     project_code VARCHAR(50) UNIQUE NOT NULL,
+--     title VARCHAR(255) NOT NULL,
+--     description TEXT NULL,
+--     location TEXT NULL,
+--     start_date DATE NULL,
+--     end_date DATE NULL,
+--     estimated_budget DECIMAL(14,2) DEFAULT 0,
+--     actual_cost DECIMAL(14,2) DEFAULT 0,
+--     project_category_id BIGINT UNSIGNED NOT NULL,
+--     project_status_id BIGINT UNSIGNED NOT NULL,
+--     client_id BIGINT UNSIGNED NOT NULL,
+--     manager_id BIGINT UNSIGNED NOT NULL,
+--     contract_amount DECIMAL(14,2) DEFAULT 0,
+--     advance_payment DECIMAL(14,2) DEFAULT 0,
+--     retention_percentage DECIMAL(5,2) DEFAULT 0,
+--     completion_percentage DECIMAL(5,2) DEFAULT 0,
+--     notes TEXT NULL,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (project_category_id) REFERENCES project_categories(id),
+--     FOREIGN KEY (project_status_id) REFERENCES project_statuses(id),
+--     FOREIGN KEY (client_id) REFERENCES clients(id),
+--     FOREIGN KEY (manager_id) REFERENCES employees(id),
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE project_team (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     project_id BIGINT UNSIGNED NOT NULL,
+--     employee_id BIGINT UNSIGNED NOT NULL,
+--     role ENUM('supervisor', 'engineer', 'foreman', 'worker', 'other') NOT NULL,
+--     start_date DATE NULL,
+--     end_date DATE NULL,
+--     is_active BOOLEAN DEFAULT TRUE,
+--     created_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
+--     FOREIGN KEY (employee_id) REFERENCES employees(id),
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     UNIQUE KEY unique_project_employee (project_id, employee_id)
+-- );
+
+-- CREATE TABLE tasks (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     project_id BIGINT UNSIGNED NOT NULL,
+--     parent_task_id BIGINT UNSIGNED NULL,
+--     title VARCHAR(255) NOT NULL,
+--     description TEXT NULL,
+--     start_date DATE NULL,
+--     end_date DATE NULL,
+--     actual_start_date DATE NULL,
+--     actual_end_date DATE NULL,
+--     status ENUM('pending', 'in_progress', 'completed', 'on_hold', 'cancelled') DEFAULT 'pending',
+--     priority ENUM('low', 'medium', 'high', 'urgent') DEFAULT 'medium',
+--     progress_percentage DECIMAL(5,2) DEFAULT 0,
+--     estimated_hours DECIMAL(6,2) NULL,
+--     actual_hours DECIMAL(6,2) NULL,
+--     assigned_to BIGINT UNSIGNED NULL,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
+--     FOREIGN KEY (parent_task_id) REFERENCES tasks(id),
+--     FOREIGN KEY (assigned_to) REFERENCES employees(id),
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- 9. FINANCIAL MANAGEMENT
+
+-- CREATE TABLE funding_source_types (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     name VARCHAR(255) NOT NULL UNIQUE,
+--     description TEXT NULL,
+--     is_active BOOLEAN DEFAULT TRUE,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE funding_sources (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     funding_source_type_id BIGINT UNSIGNED NOT NULL,
+--     source_name VARCHAR(255) NULL,
+--     project_id BIGINT UNSIGNED NOT NULL,
+--     amount DECIMAL(14,2) NOT NULL,
+--     received_date DATE NOT NULL,
+--     interest_rate DECIMAL(5,2) DEFAULT 0,
+--     due_date DATE NULL,
+--     is_interest_applied BOOLEAN DEFAULT FALSE,
+--     status ENUM('received', 'pending', 'partial') DEFAULT 'received',
+--     description TEXT NULL,
+--     reference_number VARCHAR(255) NULL,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (funding_source_type_id) REFERENCES funding_source_types(id),
+--     FOREIGN KEY (project_id) REFERENCES projects(id),
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE loan_types (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     name VARCHAR(255) NOT NULL UNIQUE,
+--     description TEXT NULL,
+--     is_active BOOLEAN DEFAULT TRUE,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE loans (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     loan_type_id BIGINT UNSIGNED NOT NULL,
+--     lender_name VARCHAR(255) NOT NULL,
+--     lender_contact VARCHAR(255) NULL,
+--     lender_address TEXT NULL,
+--     project_id BIGINT UNSIGNED NOT NULL,
+--     principal_amount DECIMAL(14,2) NOT NULL,
+--     interest_rate DECIMAL(5,2) DEFAULT 0,
+--     total_payable DECIMAL(14,2) NULL,
+--     issue_date DATE NOT NULL,
+--     due_date DATE NULL,
+--     is_interest_free BOOLEAN DEFAULT FALSE,
+--     status ENUM('active', 'paid', 'overdue') DEFAULT 'active',
+--     remaining_balance DECIMAL(14,2) NOT NULL,
+--     description TEXT NULL,
+--     loan_document_path VARCHAR(255) NULL,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (loan_type_id) REFERENCES loan_types(id),
+--     FOREIGN KEY (project_id) REFERENCES projects(id),
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE client_payments (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     project_id BIGINT UNSIGNED NOT NULL,
+--     client_id BIGINT UNSIGNED NOT NULL,
+--     payment_type ENUM('advance', 'installment', 'final', 'retention') NOT NULL,
+--     amount DECIMAL(14,2) NOT NULL,
+--     payment_date DATE NOT NULL,
+--     payment_method ENUM('cash', 'cheque', 'bank_transfer', 'online') NOT NULL,
+--     reference_number VARCHAR(255) NULL,
+--     bank_name VARCHAR(255) NULL,
+--     account_number VARCHAR(255) NULL,
+--     received_by BIGINT UNSIGNED NOT NULL,
+--     description TEXT NULL,
+--     status ENUM('pending', 'confirmed', 'cancelled') DEFAULT 'confirmed',
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (project_id) REFERENCES projects(id),
+--     FOREIGN KEY (client_id) REFERENCES clients(id),
+--     FOREIGN KEY (received_by) REFERENCES employees(id),
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE expense_categories (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     name VARCHAR(255) NOT NULL UNIQUE,
+--     description TEXT NULL,
+--     parent_id BIGINT UNSIGNED NULL,
+--     is_active BOOLEAN DEFAULT TRUE,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (parent_id) REFERENCES expense_categories(id),
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE expenses (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     project_id BIGINT UNSIGNED NOT NULL,
+--     expense_category_id BIGINT UNSIGNED NOT NULL,
+--     title VARCHAR(255) NOT NULL,
+--     description TEXT NOT NULL,
+--     amount DECIMAL(12,2) NOT NULL,
+--     expense_date DATE NOT NULL,
+--     spent_by BIGINT UNSIGNED NOT NULL,
+--     approved_by BIGINT UNSIGNED NULL,
+--     payment_method ENUM('cash', 'bank_transfer', 'cheque', 'online') NOT NULL,
+--     receipt_number VARCHAR(255) NULL,
+--     receipt_image_path VARCHAR(255) NULL,
+--     status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+--     rejection_reason TEXT NULL,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (project_id) REFERENCES projects(id),
+--     FOREIGN KEY (expense_category_id) REFERENCES expense_categories(id),
+--     FOREIGN KEY (spent_by) REFERENCES employees(id),
+--     FOREIGN KEY (approved_by) REFERENCES users(id),
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE invoices (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     project_id BIGINT UNSIGNED NOT NULL,
+--     client_id BIGINT UNSIGNED NOT NULL,
+--     invoice_number VARCHAR(255) UNIQUE NOT NULL,
+--     invoice_date DATE NOT NULL,
+--     due_date DATE NOT NULL,
+--     amount DECIMAL(14,2) NOT NULL,
+--     tax_amount DECIMAL(14,2) DEFAULT 0,
+--     total_amount DECIMAL(14,2) NOT NULL,
+--     status ENUM('draft', 'sent', 'paid', 'overdue', 'cancelled') DEFAULT 'draft',
+--     notes TEXT NULL,
+--     sent_date DATE NULL,
+--     paid_date DATE NULL,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (project_id) REFERENCES projects(id),
+--     FOREIGN KEY (client_id) REFERENCES clients(id),
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- 10. MATERIALS & INVENTORY MANAGEMENT
+
+-- CREATE TABLE material_categories (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     name VARCHAR(255) NOT NULL UNIQUE,
+--     description TEXT NULL,
+--     parent_id BIGINT UNSIGNED NULL,
+--     is_active BOOLEAN DEFAULT TRUE,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (parent_id) REFERENCES material_categories(id),
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE unit_of_measures (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     name VARCHAR(255) NOT NULL UNIQUE,
+--     symbol VARCHAR(50) NOT NULL,
+--     description TEXT NULL,
+--     is_active BOOLEAN DEFAULT TRUE,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE suppliers (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     name VARCHAR(255) NOT NULL,
+--     contact_person VARCHAR(255) NULL,
+--     phone VARCHAR(20) NULL,
+--     email VARCHAR(255) NULL,
+--     address TEXT NULL,
+--     city VARCHAR(100) NULL,
+--     state VARCHAR(100) NULL,
+--     country VARCHAR(100) DEFAULT 'Pakistan',
+--     tax_number VARCHAR(100) NULL,
+--     registration_number VARCHAR(100) NULL,
+--     supplier_type ENUM('local', 'international', 'government') DEFAULT 'local',
+--     payment_terms ENUM('net_15', 'net_30', 'net_45', 'net_60') DEFAULT 'net_30',
+--     bank_name VARCHAR(255) NULL,
+--     account_number VARCHAR(255) NULL,
+--     status ENUM('active', 'inactive', 'suspended') DEFAULT 'active',
+--     notes TEXT NULL,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE materials (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     name VARCHAR(255) NOT NULL,
+--     code VARCHAR(100) UNIQUE NULL,
+--     description TEXT NULL,
+--     material_category_id BIGINT UNSIGNED NOT NULL,
+--     unit_of_measure_id BIGINT UNSIGNED NOT NULL,
+--     unit_price DECIMAL(12,2) DEFAULT 0,
+--     supplier_id BIGINT UNSIGNED NOT NULL,
+--     current_stock DECIMAL(10,2) DEFAULT 0,
+--     min_stock_level DECIMAL(10,2) DEFAULT 0,
+--     max_stock_level DECIMAL(10,2) DEFAULT 0,
+--     reorder_level DECIMAL(10,2) DEFAULT 0,
+--     is_active BOOLEAN DEFAULT TRUE,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (material_category_id) REFERENCES material_categories(id),
+--     FOREIGN KEY (unit_of_measure_id) REFERENCES unit_of_measures(id),
+--     FOREIGN KEY (supplier_id) REFERENCES suppliers(id),
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE material_purchases (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     material_id BIGINT UNSIGNED NOT NULL,
+--     project_id BIGINT UNSIGNED NOT NULL,
+--     purchase_order_number VARCHAR(255) UNIQUE NULL,
+--     quantity DECIMAL(10,2) NOT NULL,
+--     unit_price DECIMAL(12,2) NOT NULL,
+--     total_cost DECIMAL(14,2) NOT NULL,
+--     purchase_date DATE NOT NULL,
+--     delivery_date DATE NULL,
+--     payment_method ENUM('cash', 'bank_loan', 'personal_loan', 'credit', 'online') NOT NULL,
+--     loan_id BIGINT UNSIGNED NULL,
+--     supplier_id BIGINT UNSIGNED NOT NULL,
+--     purchased_by BIGINT UNSIGNED NOT NULL,
+--     status ENUM('ordered', 'delivered', 'cancelled') DEFAULT 'ordered',
+--     notes TEXT NULL,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (material_id) REFERENCES materials(id),
+--     FOREIGN KEY (project_id) REFERENCES projects(id),
+--     FOREIGN KEY (loan_id) REFERENCES loans(id),
+--     FOREIGN KEY (supplier_id) REFERENCES suppliers(id),
+--     FOREIGN KEY (purchased_by) REFERENCES employees(id),
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE material_usage (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     material_id BIGINT UNSIGNED NOT NULL,
+--     project_id BIGINT UNSIGNED NOT NULL,
+--     task_id BIGINT UNSIGNED NULL,
+--     quantity DECIMAL(10,2) NOT NULL,
+--     unit_price DECIMAL(12,2) NOT NULL,
+--     total_cost DECIMAL(14,2) NOT NULL,
+--     usage_date DATE NOT NULL,
+--     used_by BIGINT UNSIGNED NOT NULL,
+--     notes TEXT NULL,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (material_id) REFERENCES materials(id),
+--     FOREIGN KEY (project_id) REFERENCES projects(id),
+--     FOREIGN KEY (task_id) REFERENCES tasks(id),
+--     FOREIGN KEY (used_by) REFERENCES employees(id),
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+-- 11. EQUIPMENT MANAGEMENT
+
+-- CREATE TABLE equipment_categories (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     name VARCHAR(255) NOT NULL UNIQUE,
+--     description TEXT NULL,
+--     is_active BOOLEAN DEFAULT TRUE,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE equipment (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     name VARCHAR(255) NOT NULL,
+--     code VARCHAR(100) UNIQUE NOT NULL,
+--     equipment_category_id BIGINT UNSIGNED NOT NULL,
+--     model VARCHAR(255) NULL,
+--     serial_number VARCHAR(255) UNIQUE NULL,
+--     purchase_date DATE NULL,
+--     price DECIMAL(12,2) NULL,
+--     current_value DECIMAL(12,2) NULL,
+--     depreciation_rate DECIMAL(5,2) DEFAULT 0,
+--     condition_status ENUM('excellent', 'good', 'fair', 'poor', 'under_maintenance') DEFAULT 'good',
+--     location VARCHAR(255) NULL,
+--     status ENUM('available', 'in_use', 'maintenance', 'retired') DEFAULT 'available',
+--     notes TEXT NULL,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (equipment_category_id) REFERENCES equipment_categories(id),
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE project_equipment (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     project_id BIGINT UNSIGNED NOT NULL,
+--     equipment_id BIGINT UNSIGNED NOT NULL,
+--     usage_start_date DATE NULL,
+--     usage_end_date DATE NULL,
+--     expected_end_date DATE NULL,
+--     daily_rate DECIMAL(10,2) NULL,
+--     total_cost DECIMAL(12,2) NULL,
+--     status ENUM('active', 'completed', 'cancelled') DEFAULT 'active',
+--     notes TEXT NULL,
+--     assigned_by BIGINT UNSIGNED NULL,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (project_id) REFERENCES projects(id),
+--     FOREIGN KEY (equipment_id) REFERENCES equipment(id),
+--     FOREIGN KEY (assigned_by) REFERENCES employees(id),
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE equipment_maintenance (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     equipment_id BIGINT UNSIGNED NOT NULL,
+--     maintenance_type ENUM('routine', 'repair', 'overhaul', 'inspection') NOT NULL,
+--     maintenance_date DATE NOT NULL,
+--     next_maintenance_date DATE NULL,
+--     cost DECIMAL(10,2) NULL,
+--     description TEXT NULL,
+--     performed_by VARCHAR(255) NULL,
+--     status ENUM('scheduled', 'in_progress', 'completed', 'cancelled') DEFAULT 'scheduled',
+--     notes TEXT NULL,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (equipment_id) REFERENCES equipment(id),
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- 12. SALARY & REPORTS
+
+-- CREATE TABLE salary_records (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     employee_id BIGINT UNSIGNED NOT NULL,
+--     month YEAR NOT NULL,
+--     total_days INT NOT NULL,
+--     present_days INT NOT NULL,
+--     basic_salary DECIMAL(12,2) NOT NULL,
+--     allowances DECIMAL(12,2) DEFAULT 0,
+--     deductions DECIMAL(12,2) DEFAULT 0,
+--     overtime_amount DECIMAL(12,2) DEFAULT 0,
+--     gross_amount DECIMAL(12,2) NOT NULL,
+--     net_amount DECIMAL(12,2) NOT NULL,
+--     status ENUM('draft', 'processed', 'paid', 'cancelled') DEFAULT 'draft',
+--     paid_date DATE NULL,
+--     payment_method ENUM('cash', 'bank_transfer', 'cheque') DEFAULT 'bank_transfer',
+--     notes TEXT NULL,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (employee_id) REFERENCES employees(id),
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE activity_logs (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     user_id BIGINT UNSIGNED NOT NULL,
+--     action VARCHAR(255) NOT NULL,
+--     description TEXT NULL,
+--     model_type VARCHAR(255) NULL,
+--     model_id BIGINT UNSIGNED NULL,
+--     ip_address VARCHAR(45) NULL,
+--     user_agent TEXT NULL,
+--     created_at TIMESTAMP NULL,
+--     FOREIGN KEY (user_id) REFERENCES users(id)
+-- );
+
+-- CREATE TABLE system_settings (
+--     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     key VARCHAR(255) UNIQUE NOT NULL,
+--     value TEXT NULL,
+--     type ENUM('string', 'integer', 'boolean', 'json', 'array') DEFAULT 'string',
+--     group_name VARCHAR(255) NULL,
+--     description TEXT NULL,
+--     is_public BOOLEAN DEFAULT FALSE,
+--     created_by BIGINT UNSIGNED NULL,
+--     updated_by BIGINT UNSIGNED NULL,
+--     created_at TIMESTAMP NULL,
+--     updated_at TIMESTAMP NULL,
+--     FOREIGN KEY (created_by) REFERENCES users(id),
+--     FOREIGN KEY (updated_by) REFERENCES users(id)
+-- );

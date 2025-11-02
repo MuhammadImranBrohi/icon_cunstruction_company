@@ -14,6 +14,10 @@ class AdminController extends Controller
     {
         return view('cuns_admin.dashboard.index');
     }
+    public function profile(){
+        return view('cuns_admin.dashboard.profile');
+    }
+
 
     // ===== CLIENTS =====
     public function clientsIndex() { return view('cuns_admin.clients.index'); }

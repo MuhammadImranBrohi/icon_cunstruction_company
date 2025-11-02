@@ -4,6 +4,7 @@
 @section('page_title', 'Projects - Overview')
 
 @section('content')
+
     <div class="container-fluid">
 
         {{-- ========== PAGE HEADER ========== --}}
@@ -57,19 +58,7 @@
             </div>
         </div>
 
-        {{-- ========== PROJECTS CHART ========== --}}
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-primary text-white d-flex justify-content-between">
-                <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Project Status Overview</h5>
-                <select class="form-select w-auto">
-                    <option>Current Year</option>
-                    <option>Previous Year</option>
-                </select>
-            </div>
-            <div class="card-body">
-                <canvas id="projectsChart" height="120"></canvas>
-            </div>
-        </div>
+
 
         {{-- ========== PROJECTS TABLE ========== --}}
         <div class="card shadow-sm mb-4">
@@ -143,7 +132,19 @@
                 </table>
             </div>
         </div>
-
+        {{-- ========== PROJECTS CHART ========== --}}
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white d-flex justify-content-between">
+                <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Project Status Overview</h5>
+                <select class="form-select w-auto">
+                    <option>Current Year</option>
+                    <option>Previous Year</option>
+                </select>
+            </div>
+            <div class="card-body w-50">
+                <canvas id="projectsChart" height="50"></canvas>
+            </div>
+        </div>
         {{-- ========== ADD PROJECT MODAL ========== --}}
         <div class="modal fade" id="addProjectModal" tabindex="-1">
             <div class="modal-dialog modal-lg">

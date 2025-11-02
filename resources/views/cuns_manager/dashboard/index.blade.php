@@ -1,194 +1,179 @@
 @extends('cuns_manager.layouts.main')
 
+@section('title', 'Construction Manager Dashboard')
+
 @section('content')
-    <!-- Content Start -->
-    <div class="content">
+    <div class="container-xxl py-4">
 
-        <!-- Sale & Revenue Start -->
-        <div class="container-fluid pt-4 px-4">
-            <div class="row g-4">
-                <div class="col-sm-6 col-xl-3">
-                    <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                        <i class="fa fa-chart-line fa-3x text-primary"></i>
-                        <div class="ms-3">
-                            <p class="mb-2">Today Sale</p>
-                            <h6 class="mb-0">$1,234</h6>
-                        </div>
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex align-items-center justify-content-between p-3 rounded-3 bg-light shadow-sm">
+                    <div>
+                        <h3 class="mb-1 fw-bold text-primary">Construction Manager Dashboard</h3>
+                        <small class="text-muted">Track projects, staff, and budget in real-time</small>
                     </div>
-                </div>
-                <div class="col-sm-6 col-xl-3">
-                    <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                        <i class="fa fa-chart-bar fa-3x text-success"></i>
-                        <div class="ms-3">
-                            <p class="mb-2">Total Sale</p>
-                            <h6 class="mb-0">$12,345</h6>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-xl-3">
-                    <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                        <i class="fa fa-chart-area fa-3x text-warning"></i>
-                        <div class="ms-3">
-                            <p class="mb-2">Today Revenue</p>
-                            <h6 class="mb-0">$2,345</h6>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-xl-3">
-                    <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                        <i class="fa fa-chart-pie fa-3x text-danger"></i>
-                        <div class="ms-3">
-                            <p class="mb-2">Total Revenue</p>
-                            <h6 class="mb-0">$23,456</h6>
-                        </div>
+                    <div class="d-flex gap-2">
+                        <a href="{{ route('cuns_manager.projects.create') }}" class="btn btn-primary">
+                            <i class="material-icons-round me-1">add</i> New Project
+                        </a>
+                        <a href="{{ route('cuns_manager.reports.daily') }}" class="btn btn-outline-secondary">
+                            <i class="material-icons-round me-1">assessment</i> Reports
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Sale & Revenue End -->
 
-        <!-- Sales Chart Start -->
-        <div class="container-fluid pt-4 px-4">
-            <div class="row g-4">
-                <div class="col-sm-12 col-xl-6">
-                    <div class="bg-light text-center rounded p-4">
-                        <div class="d-flex align-items-center justify-content-between mb-4">
-                            <h6 class="mb-0">Worldwide Sales</h6>
-                            <a href="#">Show All</a>
-                        </div>
-                        <canvas id="worldwide-sales"></canvas>
-                    </div>
-                </div>
-                <div class="col-sm-12 col-xl-6">
-                    <div class="bg-light text-center rounded p-4">
-                        <div class="d-flex align-items-center justify-content-between mb-4">
-                            <h6 class="mb-0">Sales & Revenue</h6>
-                            <a href="#">Show All</a>
-                        </div>
-                        <canvas id="sales-revenue"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Sales Chart End -->
-
-        <!-- Recent Sales Start -->
-        <div class="container-fluid pt-4 px-4">
-            <div class="bg-light text-center rounded p-4">
-                <div class="d-flex align-items-center justify-content-between mb-4">
-                    <h6 class="mb-0">Recent Sales</h6>
-                    <a href="#">Show All</a>
-                </div>
-                <div class="table-responsive">
-                    <table class="table text-start align-middle table-bordered table-hover mb-0">
-                        <thead>
-                            <tr class="text-dark">
-                                <th scope="col"><input class="form-check-input" type="checkbox"></th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Invoice</th>
-                                <th scope="col">Customer</th>
-                                <th scope="col">Amount</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><input class="form-check-input" type="checkbox"></td>
-                                <td>27 Oct 2025</td>
-                                <td>INV-1001</td>
-                                <td>John Smith</td>
-                                <td>$120</td>
-                                <td><span class="badge bg-success">Paid</span></td>
-                                <td><a class="btn btn-sm btn-primary" href="#">Detail</a></td>
-                            </tr>
-                            <tr>
-                                <td><input class="form-check-input" type="checkbox"></td>
-                                <td>26 Oct 2025</td>
-                                <td>INV-1002</td>
-                                <td>Jane Doe</td>
-                                <td>$250</td>
-                                <td><span class="badge bg-warning">Pending</span></td>
-                                <td><a class="btn btn-sm btn-primary" href="#">Detail</a></td>
-                            </tr>
-                            <tr>
-                                <td><input class="form-check-input" type="checkbox"></td>
-                                <td>25 Oct 2025</td>
-                                <td>INV-1003</td>
-                                <td>Mike Johnson</td>
-                                <td>$300</td>
-                                <td><span class="badge bg-danger">Cancelled</span></td>
-                                <td><a class="btn btn-sm btn-primary" href="#">Detail</a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <!-- Recent Sales End -->
-
-        <!-- Widgets Start -->
-        {{-- <div class="container-fluid pt-4 px-4">
-            <div class="row g-4">
-
-                <!-- Messages Widget -->
-                <div class="col-sm-12 col-md-6 col-xl-4">
-                    <div class="h-100 bg-light rounded p-4">
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                            <h6 class="mb-0">Messages</h6>
-                            <a href="#">Show All</a>
-                        </div>
-                         @foreach (['Alice', 'Bob', 'Charlie'] as $user)
-                    <div class="d-flex align-items-center border-bottom py-3">
-                        <img class="rounded-circle flex-shrink-0" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                        <div class="w-100 ms-3">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h6 class="mb-0">{{ $user }}</h6>
-                                <small>10 minutes ago</small>
+        <!-- Statistic Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-lg-3 col-sm-6">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted">Total Projects</h6>
+                                <h4 class="fw-bold text-primary">{{ $projectsCount }}</h4>
+                                <small class="text-success">+12% from last month</small>
                             </div>
-                            <span>Hey! How are you?</span>
+                            <span class="material-icons-round text-primary fs-1">business</span>
                         </div>
-                    </div>
-                    @endforeach 
                     </div>
                 </div>
-
-                <!-- Calendar Widget -->
-                <div class="col-sm-12 col-md-6 col-xl-4">
-                    <div class="h-100 bg-light rounded p-4">
-                        <div class="d-flex align-items-center justify-content-between mb-4">
-                            <h6 class="mb-0">Calendar</h6>
-                            <a href="#">Show All</a>
-                        </div>
-                        <div id="calendar"></div>
-                    </div>
-                </div>
-
-                <!-- To-Do List Widget -->
-                <div class="col-sm-12 col-md-6 col-xl-4">
-                    <div class="h-100 bg-light rounded p-4">
-                        <div class="d-flex align-items-center justify-content-between mb-4">
-                            <h6 class="mb-0">To-Do List</h6>
-                            <a href="#">Show All</a>
-                        </div>
-                         @foreach (['Check emails', 'Update project', 'Team meeting'] as $task)
-                    <div class="d-flex align-items-center border-bottom py-2">
-                        <input class="form-check-input m-0" type="checkbox">
-                        <div class="w-100 ms-3">
-                            <div class="d-flex w-100 align-items-center justify-content-between">
-                                <span>{{ $task }}</span>
-                                <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach 
-                    </div>
-                </div>
-
             </div>
-        </div> # --}}
-        <!-- Widgets End -->
+
+            <div class="col-lg-3 col-sm-6">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted">Ongoing Projects</h6>
+                                <h4 class="fw-bold text-warning">{{ $ongoingProjects }}</h4>
+                                <small class="text-muted">Currently active</small>
+                            </div>
+                            <span class="material-icons-round text-warning fs-1">construction</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-sm-6">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted">Total Staff</h6>
+                                <h4 class="fw-bold text-success">{{ $staffCount }}</h4>
+                                <small class="text-success">{{ $staffCount - 3 }} Active</small>
+                            </div>
+                            <span class="material-icons-round text-success fs-1">groups</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-sm-6">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted">Budget Utilization</h6>
+                                <h4 class="fw-bold text-info">{{ $budgetUtilization }}%</h4>
+                                <small class="text-muted">of total budget</small>
+                            </div>
+                            <span class="material-icons-round text-info fs-1">pie_chart</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="row mb-4">
+            <div class="col-lg-8">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white fw-bold">Project Progress Overview</div>
+                    <div class="card-body">
+                        <canvas id="barChart" height="130"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white fw-bold">Budget Utilization</div>
+                    <div class="card-body text-center">
+                        <canvas id="pieChart" height="210"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activities -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white fw-bold">Recent Activities</div>
+                    <div class="card-body">
+                        @foreach ($recentActivities as $activity)
+                            <div class="d-flex align-items-start mb-3 pb-2 border-bottom">
+                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-3"
+                                    style="width:45px;height:45px;">
+                                    <span class="material-icons-round text-primary">notifications</span>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1 fw-semibold">{{ $activity['title'] }}</h6>
+                                    <p class="mb-1 text-muted">{{ $activity['project'] }}</p>
+                                    <small class="text-muted">{{ $activity['time'] }}</small>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
-    <!-- Content End -->
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        const barChart = new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: {!! json_encode(array_column($projectProgress, 'name')) !!},
+                datasets: [{
+                    label: 'Completion %',
+                    data: {!! json_encode(array_column($projectProgress, 'progress')) !!},
+                    backgroundColor: ['#3b82f6', '#22c55e', '#facc15', '#06b6d4'],
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
+        const pieChart = new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Used Budget', 'Remaining Budget'],
+                datasets: [{
+                    data: [{{ $budgetUtilization }}, {{ 100 - $budgetUtilization }}],
+                    backgroundColor: ['#facc15', '#e2e8f0'],
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+    </script>
 @endsection

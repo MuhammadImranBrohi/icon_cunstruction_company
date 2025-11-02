@@ -131,19 +131,19 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url('/cuns_admin/inventory/orders') }}" class="nav-link">
+                            <a href="{{ url('/cuns_admin/inventory/inventory_orders') }}" class="nav-link">
                                 <i class="nav-icon bi bi-receipt-cutoff"></i>
                                 <p>Purchase Orders</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url('/cuns_admin/inventory/suppliers') }}" class="nav-link">
+                            <a href="{{ url('/cuns_admin/inventory/inventory_suppliers') }}" class="nav-link">
                                 <i class="nav-icon bi bi-truck"></i>
                                 <p>Suppliers</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url('/cuns_admin/inventory/alerts') }}" class="nav-link">
+                            <a href="{{ url('/cuns_admin/inventory/inventory_alerts') }}" class="nav-link">
                                 <i class="nav-icon bi bi-exclamation-triangle-fill"></i>
                                 <p>Stock Alerts</p>
                             </a>
@@ -296,6 +296,7 @@
                 </li>
 
                 <!-- Reports / Analytics -->
+
                 <li class="nav-header">Analytics</li>
                 <li class="nav-item">
                     <a href="#" class="nav-link {{ request()->is('cuns_admin/report*') ? 'active' : '' }}">

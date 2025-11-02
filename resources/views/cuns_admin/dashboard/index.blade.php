@@ -8,7 +8,7 @@
         {{-- ===== Page Header ===== --}}
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h3 mb-0 text-gray-800">Welcome back, Admin</h1>
-            <button class="btn btn-primary"><i class="fas fa-plus-circle"></i> Add New Project</button>
+            {{-- <button class="btn btn-primary"><i class="fas fa-plus-circle"></i> Add New Project</button> --}}
         </div>
 
         {{-- ===== Statistics Cards ===== --}}
@@ -55,7 +55,7 @@
         </div>
 
         {{-- ===== Charts Section ===== --}}
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-lg-8 mb-4">
                 <div class="card shadow-sm">
                     <div class="card-header bg-white py-3">
@@ -80,10 +80,10 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         {{-- ===== Recent Activity Table ===== --}}
-        <div class="card shadow-sm mb-4">
+        {{-- <div class="card shadow-sm mb-4">
             <div class="card-header bg-white py-3">
                 <h6 class="m-0 font-weight-bold text-primary">Recent Activity</h6>
             </div>
@@ -123,7 +123,7 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div> --}}
 
         {{-- ===== Notifications & Messages ===== --}}
         <div class="row">

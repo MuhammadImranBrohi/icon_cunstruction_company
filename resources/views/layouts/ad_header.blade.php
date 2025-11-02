@@ -138,7 +138,7 @@
             </li>
             <!--end::Fullscreen Toggle-->
             <!--start of User Menu Dropdown-->
-            <li class="nav-item dropdown user-menu">
+            <li class="nav-item dropdown user-menu ">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                     <img src="{{ asset('cuns_admin/dist/assets/img/user2-160x160.jpg') }}"
                         class="user-image rounded-circle shadow" alt="User Image" />
@@ -146,7 +146,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                     <!--start of User Image-->
-                    <li class="user-header text-bg-primary">
+                    <li class="user-header text-bg-primary" style="border-radius: 10px; 0px; 10px; 0px;">
                         <img src="{{ asset('cuns_admin/dist/assets/img/user2-160x160.jpg') }}"
                             class="rounded-circle shadow" alt="User Image" />
                         <p>
@@ -156,20 +156,17 @@
                     </li>
                     <!--end::User Image-->
                     <!--start of Menu Body-->
-                    <li class="user-body">
-                        <!--start of Row-->
-                        <div class="row">
-                            <div class="col-4 text-center"><a href="#">Followers</a></div>
-                            <div class="col-4 text-center"><a href="#">Sales</a></div>
-                            <div class="col-4 text-center"><a href="#">Friends</a></div>
-                        </div>
-                        <!--end::Row-->
-                    </li>
+                    {{-- <li class="user-body">
+                        --start of Row--
+                        - //Row-- --
+                    </li> --}}
                     <!--end::Menu Body-->
                     <!--start of Menu Footer-->
-                    <li class="user-footer">
-                        <a href="#" class="btn btn-default btn-flat">Profile</a>
-                        <a href="#" class="btn btn-default btn-flat float-end">Sign out</a>
+                    <li class="user-footer bg-primary" style="border-radius: 10px;">
+                        <a href="{{ url('cuns_admin/dashboard/profile') }}"
+                            class="btn btn-outline-light rounded-pill">Profile</a>
+                        <a href="#" class="btn btn-outline-light rounded-pill float-end">Sign
+                            out</a>
                     </li>
                     <!--end::Menu Footer-->
                 </ul>
