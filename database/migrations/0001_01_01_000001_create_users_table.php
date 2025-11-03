@@ -42,7 +42,7 @@ return new class extends Migration
             $table->timestamp('two_factor_confirmed_at')->nullable();
 
             // Team Features (Jetstream)
-            $table->foreignId('current_team_id')->nullable()->constrained('teams')->nullOnDelete();
+            $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
 
             // Custom Fields
