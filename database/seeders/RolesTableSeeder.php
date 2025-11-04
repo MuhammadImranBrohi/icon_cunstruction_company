@@ -10,17 +10,20 @@ class RolesTableSeeder extends Seeder
     public function run()
     {
         $roles = [
-            ['name' => 'Admin', 'guard_name' => 'web'],
-            ['name' => 'Manager', 'guard_name' => 'web'],
-            ['name' => 'Employee', 'guard_name' => 'web'],
-            ['name' => 'Accountant', 'guard_name' => 'web'],
-            ['name' => 'HR', 'guard_name' => 'web'],
+            'super-admin', 'admin', 'manager', 'supervisor', 'client',
+            'project-manager', 'site-engineer', 'senior-engineer', 'junior-engineer',
+            'hr-manager', 'hr-executive', 'finance-manager', 'accountant',
+            'procurement-manager', 'procurement-officer', 'site-supervisor',
+            'foreman', 'safety-officer', 'quality-controller', 'store-keeper',
+            'logistics-manager', 'driver', 'operator', 'technician',
+            'electrician', 'plumber', 'carpenter', 'mason', 'painter',
+            'welder', 'labor', 'intern', 'trainee', 'consultant', 'auditor'
         ];
 
         foreach ($roles as $role) {
             DB::table('roles')->insert([
-                'name' => $role['name'],
-                'guard_name' => $role['guard_name'],
+                'name' => $role,
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

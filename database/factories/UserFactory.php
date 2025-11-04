@@ -36,6 +36,7 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'profile_photo_path' => null,
             'current_team_id' => null,
+            'role_id' => 1, // ✅ ADDED: Default role ID for testing
         ];
     }
 
@@ -46,6 +47,7 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+            'role_id' => 1, // ✅ ADDED: Ensure role_id is set for unverified users too
         ]);
     }
 

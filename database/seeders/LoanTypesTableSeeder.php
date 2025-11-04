@@ -9,13 +9,24 @@ class LoanTypesTableSeeder extends Seeder
 {
     public function run()
     {
-        $loanTypes = ['Personal Loan','Business Loan','Home Loan','Car Loan','Education Loan','Bridge Loan','Equipment Loan','Short-term Loan','Long-term Loan','Emergency Loan',
-                      'Microfinance','Government Loan','Bank Loan','Private Loan','Startup Loan','Venture Loan','Angel Loan','Convertible Loan','Secured Loan','Unsecured Loan',
-                      'Overdraft','Line of Credit','Credit Facility','Investment Loan','Project Loan','Operational Loan','Working Capital Loan','Invoice Financing','Factoring','Leasing'];
+        $types = [
+            'Business Loan', 'Equipment Loan', 'Working Capital', 'Construction Loan',
+            'Term Loan', 'Bridge Loan', 'Mortgage Loan', 'Personal Loan',
+            'Vehicle Loan', 'Machinery Loan', 'Inventory Loan', 'Project Loan',
+            'Development Loan', 'Renovation Loan', 'Expansion Loan', 'Land Purchase Loan',
+            'Building Loan', 'Infrastructure Loan', 'Islamic Finance', 'Conventional Loan',
+            'Short Term Loan', 'Long Term Loan', 'Secured Loan', 'Unsecured Loan',
+            'Fixed Rate Loan', 'Variable Rate Loan', 'Line of Credit', 'Overdraft Facility',
+            'Import Financing', 'Export Financing', 'SME Loan', 'Corporate Loan',
+            'Agricultural Loan', 'Housing Loan', 'Commercial Loan'
+        ];
 
-        foreach ($loanTypes as $type) {
+        foreach ($types as $type) {
             DB::table('loan_types')->insert([
                 'name' => $type,
+                'description' => $type . ' for construction business needs',
+                'is_active' => 1,
+                'created_by' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

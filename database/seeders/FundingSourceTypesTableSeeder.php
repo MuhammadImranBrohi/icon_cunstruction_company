@@ -9,13 +9,24 @@ class FundingSourceTypesTableSeeder extends Seeder
 {
     public function run()
     {
-        $types = ['Equity', 'Debt', 'Grant', 'Crowdfunding', 'Angel Investment', 'Venture Capital', 'Loan', 'Savings', 'Revenue', 'Donation',
-                  'Partnership', 'Sponsor', 'Bond', 'Government Fund', 'Private Fund', 'Internal Fund', 'External Fund', 'Asset Sale', 'Investment Return', 'Miscellaneous',
-                  'Foundation', 'Trust', 'Charity', 'Loan Repayment', 'Share Issue', 'Seed Fund', 'Series A', 'Series B', 'Series C', 'Bridge Loan'];
+        $types = [
+            'Bank Loan', 'Investor Funding', 'Government Grant', 'Internal Funds',
+            'Private Equity', 'Venture Capital', 'Construction Loan', 'Bridge Financing',
+            'Mezzanine Financing', 'Islamic Financing', 'Syndicated Loan', 'Corporate Bonds',
+            'Development Finance', 'Export Credit', 'Supplier Credit', 'Customer Advance',
+            'Retained Earnings', 'Share Capital', 'Debenture', 'Mortgage Loan',
+            'Equipment Financing', 'Working Capital Loan', 'Term Loan', 'Line of Credit',
+            'Project Finance', 'Infrastructure Fund', 'Public Private Partnership', 'Crowdfunding',
+            'Angel Investment', 'Private Placement', 'IPO Proceeds', 'Government Subsidy',
+            'Foreign Investment', 'Joint Venture', 'Partnership Capital'
+        ];
 
         foreach ($types as $type) {
             DB::table('funding_source_types')->insert([
                 'name' => $type,
+                'description' => 'Funding through ' . strtolower($type) . ' for construction projects',
+                'is_active' => 1,
+                'created_by' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

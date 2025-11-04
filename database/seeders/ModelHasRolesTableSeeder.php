@@ -9,41 +9,35 @@ class ModelHasRolesTableSeeder extends Seeder
 {
     public function run()
     {
-        // Admin
-        DB::table('model_has_roles')->insert([
-            'role_id' => 1,
-            'model_type' => 'App\\Models\\User',
-            'model_id' => 1,
-        ]);
+        $data = [];
 
-        // Manager
-        DB::table('model_has_roles')->insert([
-            'role_id' => 2,
-            'model_type' => 'App\\Models\\User',
-            'model_id' => 2,
-        ]);
+        // Users 1-5 ko different roles assign karo
+        $roleAssignments = [
+            1 => 1, // Super Admin
+            2 => 2, // Admin
+            3 => 3, // Manager
+            4 => 4, // Supervisor
+            5 => 5, // Client
+        ];
 
-        // Accountant
-        DB::table('model_has_roles')->insert([
-            'role_id' => 4,
-            'model_type' => 'App\\Models\\User',
-            'model_id' => 3,
-        ]);
-
-        // HR
-        DB::table('model_has_roles')->insert([
-            'role_id' => 5,
-            'model_type' => 'App\\Models\\User',
-            'model_id' => 4,
-        ]);
-
-        // Employees
-        for ($i = 5; $i <= 35; $i++) {
-            DB::table('model_has_roles')->insert([
-                'role_id' => 3,
-                'model_type' => 'App\\Models\\User',
-                'model_id' => $i,
-            ]);
+        // First 5 users ko specific roles
+        foreach ($roleAssignments as $userId => $roleId) {
+            $data[] = [
+                'role_id' => $roleId,
+                'model_type' => 'App\Models\User',
+                'model_id' => $userId,
+            ];
         }
+
+        // Remaining users ko random roles (1-4)
+        for ($i = 6; $i <= 35; $i++) {
+            $data[] = [
+                'role_id' => rand(1, 4), // Only admin, manager, supervisor, client
+                'model_type' => 'App\Models\User',
+                'model_id' => $i,
+            ];
+        }
+
+        DB::table('model_has_roles')->insert($data);
     }
 }

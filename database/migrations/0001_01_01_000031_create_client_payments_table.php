@@ -22,9 +22,25 @@ return new class extends Migration
             $table->foreignId('received_by')->constrained('employees');
             $table->text('description')->nullable();
             $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('confirmed');
+
+            // NEW COLUMNS FOR PAYMENT FREQUENCY (without 'after')
+            $table->enum('payment_frequency', ['one_time', 'daily', 'weekly', 'monthly', 'quarterly'])->default('one_time');
+            $table->boolean('is_recurring')->default(false);
+            $table->date('next_payment_date')->nullable();
+            $table->date('period_start_date')->nullable();
+            $table->date('period_end_date')->nullable();
+            $table->string('schedule_id')->nullable();
+            $table->decimal('pending_balance', 14, 2)->default(0.00);
+
             $table->foreignId('created_by')->nullable()->constrained('users');
             $table->foreignId('updated_by')->nullable()->constrained('users');
             $table->timestamps();
+
+            // Indexes for better performance
+            $table->index(['payment_date', 'status']);
+            $table->index(['client_id', 'payment_type']);
+            $table->index(['payment_frequency', 'next_payment_date']);
+            $table->index(['is_recurring', 'status']);
         });
     }
 
